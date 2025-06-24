@@ -1,0 +1,5 @@
+* linguist-language=GO
+* text=auto eol=lf      # 所有文本文件使用LF
+*.{yaml,yml,json,md} text eol=lf  # 强制配置文件和文档使用LF
+*.{sh,bash,zsh} text eol=lf       # Shell脚本必须使用LF
+*.{bat,cmd} text eol=crlf         # Windows批处理文件使用CRLF
