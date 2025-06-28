@@ -7,7 +7,7 @@ import (
 )
 
 func (c *ControllerV1) Info(ctx context.Context, req *v1.InfoReq) (res *v1.InfoRes, err error) {
-	// 获取用户细腻些
+	// 获取用户信息
 	info, err := c.users.Info(ctx)
 	if err != nil {
 		return nil, err

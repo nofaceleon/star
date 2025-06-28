@@ -4,6 +4,7 @@ import (
 	"context"
 	"star2/internal/controller/account"
 	"star2/internal/controller/users"
+	"star2/internal/controller/words"
 	"star2/internal/logic/middleware"
 
 	"github.com/gogf/gf/v2/frame/g"
@@ -24,7 +25,10 @@ var (
 					group.Bind(users.NewV1())
 					group.Group("/", func(group *ghttp.RouterGroup) {
 						group.Middleware(middleware.Auth)
-						group.Bind(account.NewV1())
+						group.Bind(
+							account.NewV1(),
+							words.NewV1(),
+						)
 					})
 				})
 			})
