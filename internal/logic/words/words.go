@@ -6,6 +6,7 @@ import (
 	v1 "star2/api/words/v1"
 	"star2/internal/dao"
 	"star2/internal/model/do"
+	"star2/internal/model/entity"
 )
 
 type Words struct {
@@ -53,18 +54,19 @@ func (w *Words) Create(ctx context.Context, in CreateInput) error {
 
 type UpdateInput CreateInput
 
-func (w *Words) Update(ctx context.Context, id int, in UpdateInput) error {
+// Update 更新单词
+func (w *Words) Update(ctx context.Context, id uint, in UpdateInput) error {
 
-	var cls = dao.Words.Columns()
-
-	count, err := dao.Words.Ctx(ctx).Where(cls.Uid, in.Uid).Where(cls.Word, in.Word).Count()
+	var cls = dao.Words.Columns() //获取这个表中的字段名
+	// 用户只能更新自己的单词
+	count, err := dao.Words.Ctx(ctx).Where(cls.Uid, in.Uid).Where(cls.Id, id).Count()
 
 	if err != nil {
 		return err
 	}
 
-	if count > 0 {
-		return gerror.New("单词已存在")
+	if count == 0 {
+		return gerror.New("单词不存在")
 	}
 
 	_, err = dao.Words.Ctx(ctx).Where(cls.Id, id).Data(do.Words{
@@ -78,4 +80,39 @@ func (w *Words) Update(ctx context.Context, id int, in UpdateInput) error {
 
 	return err
 
+}
+
+type ListInput struct {
+	Uid  uint
+	Word string
+	Page int
+	Size int
+}
+
+func (w *Words) List(ctx context.Context, in ListInput) (list []entity.Words, total int, err error) {
+	if in.Page <= 0 {
+		in.Page = 1
+	}
+
+	if in.Size <= 0 || in.Size > 100 {
+		in.Size = 10
+	}
+
+	var cls = dao.Words.Columns()
+	var orm = dao.Words.Ctx(ctx)
+
+	if in.Uid > 0 {
+		orm = orm.Where(cls.Uid, in.Uid)
+	}
+
+	if len(in.Word) != 0 {
+		orm = orm.WhereLike(cls.Word, "%"+in.Word+"%")
+	}
+
+	orm = orm.OrderDesc(cls.Id).OrderDesc(cls.CreatedAt).Page(in.Page, in.Size)
+	err = orm.ScanAndCount(&list, &total, true)
+	if err != nil {
+		return nil, 0, err
+	}
+	return
 }

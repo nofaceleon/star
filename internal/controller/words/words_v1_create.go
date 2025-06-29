@@ -8,13 +8,13 @@ import (
 )
 
 func (c *ControllerV1) Create(ctx context.Context, req *v1.CreateReq) (res *v1.CreateRes, err error) {
-	uid, err := c.users.GetUid(ctx)
+	uid, err := c.usersLogic.GetUid(ctx)
 	if err != nil {
 		return nil, err
 	}
 
 	// 创建单词
-	err = c.words.Create(ctx, words.CreateInput{
+	err = c.wordsLogic.Create(ctx, words.CreateInput{
 		Uid:                uid,
 		Word:               req.Word,
 		Definition:         req.Definition,

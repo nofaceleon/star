@@ -10,11 +10,11 @@ import (
 )
 
 type ControllerV1 struct {
-	users *userLogic.Users
+	usersLogic *userLogic.Users
 }
 
 func NewV1() users.IUsersV1 {
 	return &ControllerV1{
-		users: userLogic.New(),
+		usersLogic: userLogic.New(),
 	}
 }

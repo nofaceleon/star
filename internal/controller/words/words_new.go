@@ -11,13 +11,13 @@ import (
 )
 
 type ControllerV1 struct {
-	users *userLogic.Users
-	words *wordsLogic.Words
+	usersLogic *userLogic.Users
+	wordsLogic *wordsLogic.Words
 }
 
 func NewV1() words.IWordsV1 {
 	return &ControllerV1{
-		users: userLogic.New(),
-		words: wordsLogic.New(),
+		usersLogic: userLogic.New(),
+		wordsLogic: wordsLogic.New(),
 	}
 }

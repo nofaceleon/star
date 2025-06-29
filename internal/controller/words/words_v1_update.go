@@ -2,13 +2,26 @@ package words
 
 import (
 	"context"
-
-	"github.com/gogf/gf/v2/errors/gcode"
-	"github.com/gogf/gf/v2/errors/gerror"
+	"star2/internal/logic/words"
 
 	"star2/api/words/v1"
 )
 
 func (c *ControllerV1) Update(ctx context.Context, req *v1.UpdateReq) (res *v1.UpdateRes, err error) {
-	return nil, gerror.NewCode(gcode.CodeNotImplemented)
+
+	uid, err := c.usersLogic.GetUid(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.wordsLogic.Update(ctx, req.Id, words.UpdateInput{
+		Uid:                uid,
+		Word:               req.Word,
+		Definition:         req.Definition,
+		ExampleSentence:    req.ExampleSentence,
+		ChineseTranslation: req.ChineseTranslation,
+		Pronunciation:      req.Pronunciation,
+		ProficiencyLevel:   req.ProficiencyLevel,
+	})
+	return nil, err
 }

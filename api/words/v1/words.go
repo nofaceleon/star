@@ -40,3 +40,22 @@ type UpdateReq struct {
 
 type UpdateRes struct {
 }
+
+type SingleWord struct {
+	Id               uint
+	Word             string
+	Definition       string
+	ProficiencyLevel ProficiencyLevel
+}
+
+type ListReq struct {
+	g.Meta `path:"words" method:"get" sm:"列表" tags:"单词"`
+	Word   string `json:"word" v:"length:1,100" dc:"模糊查询单词"`
+	Page   int    `json:"page" v:"min:1" dc:"页码，默认1"`
+	Size   int    `json:"size" v:"between:1,100" dc:"每页数量，默认10"`
+}
+
+type ListRes struct {
+	List  []SingleWord `json:"list"`
+	Total int          `json:"total"`
+}
