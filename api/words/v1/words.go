@@ -2,6 +2,7 @@ package v1
 
 import (
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/os/gtime"
 )
 
 type ProficiencyLevel uint
@@ -58,4 +59,29 @@ type ListReq struct {
 type ListRes struct {
 	List  []SingleWord `json:"list"`
 	Total int          `json:"total"`
+}
+
+type DetailReq struct {
+	g.Meta `path:"words/:id" method:"get" sm:"详情" tags:"单词"`
+	Id     uint
+}
+
+type DetailRes struct {
+	Id                 uint             `json:"id,omitempty"`
+	Word               string           `json:"word,omitempty"`
+	Definition         string           `json:"definition,omitempty"`
+	ExampleSentence    string           `json:"exampleSentence,omitempty"`
+	ChineseTranslation string           `json:"chineseTranslation,omitempty"`
+	Pronunciation      string           `json:"pronunciation,omitempty"`
+	ProficiencyLevel   ProficiencyLevel `json:"proficiencyLevel,omitempty"`
+	CreatedAt          *gtime.Time      `json:"createdAt,omitempty"`
+	UpdatedAt          *gtime.Time      `json:"updatedAt,omitempty"`
+}
+
+type DeleteReq struct {
+	g.Meta `path:"words/:id" method:"delete" sm:"删除" tags:"单词"`
+	Id     uint
+}
+
+type DeleteRes struct {
 }

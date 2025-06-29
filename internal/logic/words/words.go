@@ -116,3 +116,43 @@ func (w *Words) List(ctx context.Context, in ListInput) (list []entity.Words, to
 	}
 	return
 }
+
+func (w *Words) Detail(ctx context.Context, id uint, uid uint) (word *entity.Words, err error) {
+	var cls = dao.Words.Columns()
+	var orm = dao.Words.Ctx(ctx)
+
+	orm = orm.Where(cls.Id, id)
+	if uid > 0 {
+		orm = orm.Where(cls.Uid, uid)
+	}
+	err = orm.Scan(&word)
+	return
+}
+
+func (w *Words) Delete(ctx context.Context, id uint, uid uint) (err error) {
+	var cls = dao.Words.Columns()
+	var orm = dao.Words.Ctx(ctx)
+
+	orm = orm.Where(cls.Id, id)
+	if uid > 0 {
+		orm = orm.Where(cls.Uid, uid)
+	}
+	_, err = orm.Delete()
+	return
+}
+
+func (w *Words) RandList(ctx context.Context, limit int, uid uint) (list []entity.Words, err error) {
+	if limit <= 0 {
+		limit = 50
+	}
+	var cls = dao.Words.Columns()
+	var orm = dao.Words.Ctx(ctx)
+	if uid > 0 {
+		orm = orm.Where(cls.Uid, uid)
+	}
+	err = orm.Limit(limit).OrderRandom().Scan(&list)
+	if err != nil {
+		return nil, err
+	}
+	return
+}
